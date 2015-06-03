@@ -1,0 +1,64 @@
+<!DOCTYPE html> 
+<html>
+<head>
+<meta charset="utf-8">
+<title>Georeferencia 1.0</title>
+<link rel="stylesheet" type="text/css" href="css/jquery.mobile-1.4.5.min.css" />
+<link rel="stylesheet" type="text/css" href="css/jquery-ui.css" />
+<script src="cordova.js"></script>
+<script src="js/jquery.min.js" type="text/javascript"></script>
+<script src="js/jquery-ui.js" type="text/javascript"></script>
+<script src="js/jquery.mobile-1.4.5.min.js" type="text/javascript"></script>
+<script type="text/javascript" charset="utf-8">
+        document.addEventListener("deviceready", onDeviceReady, false);
+        
+        function onDeviceReady() {
+            var btnTomarFoto=$("#btnTomarFoto");
+            btnTomarFoto.tap(function (){
+            navigator.device.capture.captureImage(function(mediaFiles){
+		path = mediaFiles[0].fullPath;
+		$('#regFoto').append('<br><img id="imagen" src="'+path+'" width="100%" />').attr('rel',path);
+	    },function(error){
+		navigator.notification.alert('Error code: ' + error.code, null, 'Capture Error');
+	    },{limit:1});            
+            });          
+            var btnSubirArchivo=$("#btnSubirArchivo");
+            btnSubirArchivo.tap(function (){
+	      var rutaIMG=$("#imagen").attr("src");
+	      uploadPhoto(rutaIMG);
+	      });
+        }
+        function uploadPhoto(foto) {       
+	var options = new FileUploadOptions();
+	options.fileKey="file";
+	options.fileName=$("#nomImagen").val();
+	options.mimeType="image/jpeg";
+	var params = {};
+	params.value1 = "test";
+	params.value2 = "param";
+	options.params = params;
+	var ft = new FileTransfer();
+	ft.upload(foto,"http://vape2.260mb.net/upload.php",function(r){		
+		navigator.notification.confirm("El archivo: "+r.response,null, "Notificacion");
+	}, function(err){
+		navigator.notification.alert("Error: "+err.code,null, "Error de Envío");
+	}, options);
+}
+        </script>
+</head>
+<body>
+<div data-role="page" id="principal">
+    <div data-role="header" >
+	<h1>Subir archivo a servidior</h1>
+    </div>
+    <div data-role="content">
+	<input type="button" id="btnTomarFoto" value="Tomar Foto" >	
+	<div id="regFoto"></div>
+	<input type="text" id="nomImagen" placeholder="Nombre del servicio">
+	<input type="button" id="btnSubirArchivo" value="Subir Arcchivo" >
+    </div>
+    <div data-role="footer">
+	<p>Derechos reservados</p>
+    </div>
+</body>
+</html>
