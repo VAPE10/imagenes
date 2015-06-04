@@ -14,14 +14,16 @@
         
         function onDeviceReady() {
             var btnTomarFoto=$("#btnTomarFoto");
+			
             btnTomarFoto.tap(function (){
-            navigator.device.capture.captureImage(function(mediaFiles){
-		path = mediaFiles[0].fullPath;
-		$('#regFoto').append('<br><img id="imagen" src="'+path+'" width="100%" />').attr('rel',path);
-	    },function(error){
-		navigator.notification.alert('Error code: ' + error.code, null, 'Capture Error');
-	    },{limit:1});            
-            });          
+				navigator.device.capture.captureImage(function(mediaFiles){
+				path = mediaFiles[0].fullPath;
+				$('#regFoto').append('<br><img id="imagen" src="'+path+'" width="100%" />').attr('rel',path);
+				},function(error){
+						navigator.notification.alert('Error code: ' + error.code, null, 'Capture Error');
+						},{limit:1});
+				});
+			
             var btnSubirArchivo=$("#btnSubirArchivo");
             btnSubirArchivo.tap(function (){
 	      var rutaIMG=$("#imagen").attr("src");
